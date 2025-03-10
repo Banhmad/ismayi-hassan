@@ -9,6 +9,9 @@ import Retail from "./pages/Retail";
 import RetailDetails from "./pages/RetailDetails";
 import Grocery from "./pages/Grocery";
 import Transportation from "./pages/Transportation";
+import Maintenance from "./pages/Maintenance";
+import MaintenanceCategory from "./pages/MaintenanceCategory";
+import MaintenanceBooking from "./pages/MaintenanceBooking";
 import routes from "tempo-routes";
 
 function App() {
@@ -28,6 +31,15 @@ function App() {
           <Route path="/retail/:id" element={<RetailDetails />} />
           <Route path="/grocery" element={<Grocery />} />
           <Route path="/transportation" element={<Transportation />} />
+          <Route path="/maintenance" element={<Maintenance />} />
+          <Route
+            path="/maintenance/:categoryId"
+            element={<MaintenanceCategory />}
+          />
+          <Route
+            path="/maintenance/book/:categoryId/:providerId"
+            element={<MaintenanceBooking />}
+          />
         </Routes>
         {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
       </>

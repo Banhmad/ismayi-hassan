@@ -5,8 +5,9 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
+import { authService } from "../services/api";
 
-type UserType = "customer" | "provider";
+type UserType = "customer" | "provider" | "admin";
 
 interface User {
   id: string;
@@ -21,7 +22,8 @@ interface User {
 type AuthContextType = {
   user: User | null;
   isLoggedIn: boolean;
-  login: (email: string, password: string, type: UserType) => Promise<void>;
+  loading: boolean;
+  login: (email: string, password: string, type?: UserType) => Promise<void>;
   signup: (userData: Partial<User>, password: string) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
@@ -34,65 +36,80 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Check for saved user on initial load
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setIsLoggedIn(true);
-    }
+    const checkLoggedIn = async () => {
+      try {
+        const savedUser = localStorage.getItem("user");
+        const token = localStorage.getItem("token");
+
+        if (savedUser && token) {
+          setUser(JSON.parse(savedUser));
+          setIsLoggedIn(true);
+
+          // Verify token is still valid by fetching current user
+          const { data } = await authService.getCurrentUser();
+          setUser(data);
+        }
+      } catch (error) {
+        console.error("Authentication error:", error);
+        // If token is invalid, log out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setUser(null);
+        setIsLoggedIn(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkLoggedIn();
   }, []);
 
   const login = async (
     email: string,
     password: string,
-    type: UserType,
+    type?: UserType,
   ): Promise<void> => {
-    // In a real app, this would validate credentials with a backend
-    // For demo purposes, we'll create a mock user
-    const mockUser: User = {
-      id: "123456",
-      name: type === "customer" ? "John Doe" : "Business Name",
-      email,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
-      type,
-      digitalCurrency: 100, // Starting amount
-      verified: true,
-    };
-
-    setUser(mockUser);
-    setIsLoggedIn(true);
-    localStorage.setItem("user", JSON.stringify(mockUser));
+    try {
+      setLoading(true);
+      const { user, token } = await authService.login(email, password);
+      setUser(user);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const signup = async (
     userData: Partial<User>,
     password: string,
   ): Promise<void> => {
-    // In a real app, this would create a new user in the backend
-    // For demo purposes, we'll create a mock user
-    const mockUser: User = {
-      id: Math.random().toString(36).substring(2, 9),
-      name: userData.name || "New User",
-      email: userData.email || "user@example.com",
-      avatar:
-        userData.avatar ||
-        `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.email}`,
-      type: userData.type || "customer",
-      digitalCurrency: 50, // Welcome bonus
-      verified: false,
-    };
-
-    setUser(mockUser);
-    setIsLoggedIn(true);
-    localStorage.setItem("user", JSON.stringify(mockUser));
+    try {
+      setLoading(true);
+      const { user, token } = await authService.register({
+        ...userData,
+        password,
+      });
+      setUser(user);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Signup failed:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = (): void => {
+    authService.logout();
     setUser(null);
     setIsLoggedIn(false);
-    localStorage.removeItem("user");
   };
 
   const updateUser = (userData: Partial<User>): void => {
@@ -105,7 +122,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoggedIn, login, signup, logout, updateUser }}
+      value={{ user, isLoggedIn, loading, login, signup, logout, updateUser }}
     >
       {children}
     </AuthContext.Provider>

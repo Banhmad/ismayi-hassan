@@ -64,6 +64,7 @@ const CategoryGrid = ({
       name: "Maintenance",
       icon: <Wrench className="h-10 w-10" />,
       description: "Home repairs and professional services",
+      link: "/maintenance",
     },
   ],
   onCategorySelect = () => {},
