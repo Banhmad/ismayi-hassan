@@ -8,6 +8,8 @@ import {
   Wrench,
   Car,
   TrendingUp,
+  Plane,
+  Home,
 } from "lucide-react";
 
 interface CategoryItem {
@@ -27,52 +29,59 @@ const CategoryGrid = ({
   categories = [
     {
       id: "accommodation",
-      name: "Accommodation",
+      name: "خدمات إقامة",
       icon: <Building2 className="h-10 w-10" />,
-      description: "Find hotels, apartments, and vacation rentals",
+      description: "فنادق، شقق، وإيجارات عطلات",
       link: "/accommodation",
     },
     {
       id: "retail",
-      name: "Retail",
+      name: "خدمات تجارية",
       icon: <ShoppingBag className="h-10 w-10" />,
-      description: "Shop from local and global retailers",
+      description: "تسوق من المتاجر المحلية والعالمية",
       link: "/retail",
     },
     {
-      id: "grocery",
-      name: "Grocery",
-      icon: <ShoppingBag className="h-10 w-10" />,
-      description: "Order groceries and household essentials",
-      link: "/grocery",
-    },
-    {
       id: "restaurants",
-      name: "Restaurants",
+      name: "خدمات مطاعم",
       icon: <Utensils className="h-10 w-10" />,
-      description: "Discover dining options and food delivery",
-    },
-    {
-      id: "transportation",
-      name: "Transportation",
-      icon: <Car className="h-10 w-10" />,
-      description: "Book rides, rentals, and delivery services",
-      link: "/transportation",
+      description: "اكتشف خيارات الطعام وخدمات التوصيل",
+      link: "/restaurants",
     },
     {
       id: "maintenance",
-      name: "Maintenance",
+      name: "خدمات صيانة",
       icon: <Wrench className="h-10 w-10" />,
-      description: "Home repairs and professional services",
+      description: "إصلاحات منزلية وخدمات مهنية",
       link: "/maintenance",
+    },
+    {
+      id: "transportation",
+      name: "خدمات توصيل ونقل",
+      icon: <Car className="h-10 w-10" />,
+      description: "حجز رحلات، تأجير، وخدمات توصيل",
+      link: "/transportation",
+    },
+    {
+      id: "travel",
+      name: "خدمات سفر",
+      icon: <Plane className="h-10 w-10" />,
+      description: "حجز رحلات طيران وفنادق",
+      link: "/travel",
+    },
+    {
+      id: "investment",
+      name: "خدمات استثمارية",
+      icon: <TrendingUp className="h-10 w-10" />,
+      description: "فرص استثمارية وخدمات مالية",
+      link: "/investment",
     },
   ],
   onCategorySelect = () => {},
 }: CategoryGridProps) => {
   return (
-    <div className="w-full max-w-[1200px] mx-auto bg-white p-4">
-      <h2 className="text-2xl font-bold mb-6 text-center">Browse Categories</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+    <div className="w-full max-w-[1200px] mx-auto px-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {categories.map((category) => (
           <Card
             key={category.id}
@@ -84,14 +93,11 @@ const CategoryGrid = ({
               }
             }}
           >
-            <CardContent className="p-6 flex flex-col items-center text-center">
-              <div className="mb-4 p-4 rounded-full bg-primary/10 text-primary">
+            <CardContent className="p-4 flex flex-col items-center text-center">
+              <div className="mb-2 p-3 rounded-full bg-primary/10 text-primary">
                 {category.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
-              <p className="text-muted-foreground text-sm">
-                {category.description}
-              </p>
+              <h3 className="text-base font-semibold">{category.name}</h3>
             </CardContent>
           </Card>
         ))}

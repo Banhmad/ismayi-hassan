@@ -28,3 +28,10 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+# SECURITY WARNING
+
+Never commit real credentials to your repository. Always use environment variables or a secure vault service for sensitive information.
+
+The .env file has been created with placeholder values. Please replace them with your actual credentials when running the application locally.
+
+Make sure .env is included in your .gitignore file to prevent accidental commits.

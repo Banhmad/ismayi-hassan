@@ -11,11 +11,15 @@ const SocialLogin: React.FC<SocialLoginProps> = ({ onSuccess }) => {
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
   const handleGoogleLogin = () => {
-    window.location.href = `${apiUrl}/auth/google`;
+    // بدلاً من إعادة التوجيه إلى خادم OAuth، سنقوم بمحاكاة نجاح تسجيل الدخول
+    console.log("محاولة تسجيل الدخول باستخدام Google");
+    if (onSuccess) onSuccess();
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = `${apiUrl}/auth/facebook`;
+    // بدلاً من إعادة التوجيه إلى خادم OAuth، سنقوم بمحاكاة نجاح تسجيل الدخول
+    console.log("محاولة تسجيل الدخول باستخدام Facebook");
+    if (onSuccess) onSuccess();
   };
 
   return (
